@@ -8,6 +8,7 @@ import os
 import cv2
 import csv
 import dlib
+import sys
 
 item = ['01','02','03','04','05','06','07','08','09',
 		'10','11','12','13','14','15','16','17','18','19',
@@ -40,6 +41,7 @@ def process(print_every=200):
 
 	# for each video
 	for idx in item:
+		minx, miny, maxx, maxy = sys.maxint, sys.maxint, sys.minint, sys.minint
 		ItemName = 'SN' + str(idx).zfill(3)
 		FrameLabel = [' ']
 		existsAU = [0]
@@ -76,6 +78,35 @@ def process(print_every=200):
 		if not os.path.isdir('./DISFA_in_au/'+ItemName):
 			os.mkdir('./DISFA_in_au/'+ItemName)
 
+		for t, label in enumerate(FrameLabel):
+			if existsAU[t] == 0:
+				continue
+			if t % print_every == 0:
+				print(t, existsAU[t])
+				print("face detecting: {}".format(t))
+
+			saveImagePath = './DISFA_in_au/'+ItemName+'/'+ItemName+'_l_'+str(t)+'.png'
+			if not os.path.isfile(saveImagePath):
+				vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
+				isRead,frame = vidLeft.read()
+
+				frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+				faceDetector = dlib.get_frontal_face_detector()
+				face = faceDetector(frame_gray, 1)
+				if len(face) == 0:
+					print("No face detected in {}".format(saveImagePath))
+					continue
+				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
+				if left < minx:
+					minx = left
+				if top < miny:
+					miny = top
+				if right > maxx:
+					maxx = right
+				if bottom > maxy:
+					maxy = bottom
+		print("general face rect is:({}, {}), ({}, {})".format(minx, miny, maxx, maxy))
+
 		for t,label in enumerate(FrameLabel):
 			if existsAU[t]==0:
 				continue
@@ -90,14 +121,7 @@ def process(print_every=200):
 				vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
 				isRead,frame = vidLeft.read()
 
-				# todo: process image and crop face
-				# do face detection to every frame and record the most top-left point and largest size
-				# crop every image using the same point and size info
-
-
-				# /todo
-
-				cv2.imwrite(saveImagePath,frame)
+				cv2.imwrite(saveImagePath,frame[minx: maxx, miny: maxy])
 				print("Saved",saveImagePath,file=logfile)
 			else:
 				print(saveImagePath, "exists.",file=logfile)
