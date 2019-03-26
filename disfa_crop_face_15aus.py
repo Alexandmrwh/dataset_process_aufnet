@@ -34,7 +34,7 @@ def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 	
 
 def process(print_every=200):
-	final_label = open("disfa_15aus_label_0325.txt",'w')
+	final_label = open("../DISFA_face_crop_15aus/disfa_15aus_label_0325.txt",'w')
 
 	# for each video
 	for idx in item:
@@ -122,7 +122,7 @@ def process(print_every=200):
 				print("Saving frame {}".format(t))
 
 			saveImagePath = '../DISFA_face_crop_15aus/'+ItemName+'/'+ItemName+'_l_'+str(t)+'.png'
-			_path = '../'+ItemName+'/'+ItemName+'_l_'+str(t)+'.png'
+			_path = './'+ItemName+'/'+ItemName+'_l_'+str(t)+'.png'
 			if not os.path.isfile(saveImagePath):
 				vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
 				isRead,frame = vidLeft.read()
