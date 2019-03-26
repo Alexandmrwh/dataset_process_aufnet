@@ -23,7 +23,6 @@ au_idx = [1, 2, 4, 5, 6, 7, 9 ,10 ,12, 17 ,23 ,24, 25 ,26 ,43]
 logfile = open('./logfile','a')
 LeftVideoPath = '../DISFA/Videos_LeftCamera/'
 AULabelPath = '../DISFA/ActionUnit_Labels/'
-savePath = '../'
 
 def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 	if exists:
@@ -121,8 +120,8 @@ def process(print_every=200):
 			if t % print_every == 0:
 				print("Saving frame {}".format(t))
 
-			saveImagePath = '../DISFA_face_crop_15aus/'+ItemName+'/'+ItemName+'_l_'+str(t)+'.png'
-			_path = './'+ItemName+'/'+ItemName+'_l_'+str(t)+'.png'
+			saveImagePath = '../DISFA_face_crop_15aus/'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
+			_path = './'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
 			if not os.path.isfile(saveImagePath):
 				vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
 				isRead,frame = vidLeft.read()
