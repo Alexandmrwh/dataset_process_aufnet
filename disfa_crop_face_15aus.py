@@ -14,7 +14,8 @@ INT_MAX = sys.maxsize
 
 INT_MIN = -sys.maxsize-1
 
-item = ['01','02','03','04','05','06','07','08','09',
+item = [#'01'
+		'02','03','04','05','06','07','08','09',
 		'10','11','12','13','14','15','16','17','18','19',
 		'20','21','22','23','24','25','26','27','28','29',
 		'30','31','32']
@@ -33,10 +34,10 @@ def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 	
 
 def process(print_every=200):
-	final_label = open("../DISFA_face_crop_15aus/disfa_15aus_label_0325.txt",'w')
 
 	# for each video
 	for idx in item:
+		final_label = open("../DISFA_face_crop_15aus/disfa_15aus_session_{}.txt".format(idx),'w')
 		minx, miny, maxx, maxy = INT_MAX, INT_MAX, INT_MIN, INT_MIN
 		ItemName = 'SN' + str(idx).zfill(3)
 		FrameLabel = [' ']
@@ -87,25 +88,25 @@ def process(print_every=200):
 			
 			vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
 			isRead,frame = vidLeft.read()
+			if isRead:
+				# detect face rect, return in [left, top, right, bottom]
+				frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+				faceDetector = dlib.get_frontal_face_detector()
+				face = faceDetector(frame_gray, 1)
+				if len(face) == 0:
+					print("No face detected in frame{}".format(t))
+					continue
+				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
 
-			# detect face rect, return in [left, top, right, bottom]
-			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-			faceDetector = dlib.get_frontal_face_detector()
-			face = faceDetector(frame_gray, 1)
-			if len(face) == 0:
-				print("No face detected in frame{}".format(t))
-				continue
-			left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
-
-			# update the largest rect in one session
-			if left < minx:
-				minx = left
-			if top < miny:
-				miny = top
-			if right > maxx:
-				maxx = right
-			if bottom > maxy:
-				maxy = bottom
+				# update the largest rect in one session
+				if left < minx:
+					minx = left
+				if top < miny:
+					miny = top
+				if right > maxx:
+					maxx = right
+				if bottom > maxy:
+					maxy = bottom
 
 			if t % print_every == 0:
 				print("face detecting: {}".format(t))
@@ -126,14 +127,17 @@ def process(print_every=200):
 				vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
 				isRead,frame = vidLeft.read()
 				# crop face and save
-				cv2.imwrite(saveImagePath,frame[minx: maxx, miny: maxy])
-				print("Saved",saveImagePath,file=logfile)
+				if isRead:
+					# cv2.imwrite(saveImagePath,frame[minx: maxx, miny: maxy])
+					cv2.imwrite(saveImagePath,frame[miny: maxy, minx: maxx])
+
+					print("Saved",saveImagePath,file=logfile)
 			else:
 				print(saveImagePath, "exists.",file=logfile)
 			print(_path,label,file=final_label)
 			
 
-	final_label.close()
+		final_label.close()
 
 
 if __name__ == '__main__':
