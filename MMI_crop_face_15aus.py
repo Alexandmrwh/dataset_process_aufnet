@@ -20,9 +20,7 @@ subject_idx = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 AU = [1,2,4,5,6,7,9,10,12,17,23,24,25,26,43]
 Pos = np.zeros([17,len(AU)])
 Neg = np.zeros([17,len(AU)])
-path_MMI = "/home/ubuntu/AU-WorkSite/FAC_DataBase/MMI_cropped/"
-
-faceDet = cv2.CascadeClassifier("/home/ubuntu/AU-WorkSite/Expri11.30/haarcascades/haarcascade_frontalface_default.xml")
+path_MMI = '../MMI_crop_face_15aus/'
 
 def _locate_faces(frame):
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -36,7 +34,7 @@ def _locate_faces(frame):
 
 def produce_data(SavePath, SubNum, subDown, subUp, status):
     print ("Subject: ", SubNum)
-    ReadPath = "/home/ubuntu/AU-WorkSite/FAC_DataBase/MMI database/subject"+str(SubNum)+"/Sessions/"
+    ReadPath = "/home/ubuntu/AU-WorkSite/FAC_DataBase/MMIdatabase/subject"+str(SubNum)+"/Sessions/"
     SavePath = SavePath + status + "/"
     if not os.path.isdir(SavePath):
         os.makedirs(SavePath)
@@ -140,67 +138,16 @@ def produce_data(SavePath, SubNum, subDown, subUp, status):
                     SavePath4 = SavePath5
                 read_value, webcam_image = vc.read()
 
-def count_session(SubNum, subDown, subUp):
-    ReadPath1 = "/home/ubuntu/AU-WorkSite/FAC_DataBase/MMI database/subject"+str(SubNum)+"/Sessions/"
-    SavePath2 = "/home/ubuntu/AU-WorkSite/FAC_DataBase/MMI database/subject"+str(SubNum)+"/Sessions/" 
-    AU4Session = []
-    DetectedAU4Session = []
-    count = 0
-
-    for SessionNum in range(subDown,subUp):
-        if(SessionNum == 244): continue
-        SessionPath = ReadPath1 + str(SessionNum)+"/"
-        if not os.path.isdir(SessionPath):
-            continue
-        else:
-            count += 1
-    return count
-
-class MyDataset(torch.utils.data.Dataset):
-    def __init__(self, root,datatxt, replicates = 1,transform = transforms.ToTensor(),target_transform = None):
-        fh = open(root + datatxt,'r')
-        imgs = []
-        i = 0
-        for line in fh:
-            line = line.strip('\n')
-            line = line.rstrip()
-            words = line.split()
-            img_path = [words[0],words[1]]
-            res = []
-            for index in range(2, num_classes + 2):
-                res.append(int(words[index]))
-                    #print(i)
-                imgs.append((img_path, res))
-                i += 1
-        self.imgs = imgs
-        self.transform = transform
-        self.target_transform = target_transform
-
-    def __getitem__(self, index):
-        fn, label = self.imgs[index]
-        #print(label)
-        img1 = Image.open(fn[0]).convert('RGB')
-        img2 = Image.open(fn[1]).convert('RGB')
-        label = np.array(label)
-        if self.transform is not None:
-            img1 = self.transform(img1)
-            img2 = self.transform(img2)
-        return img1, img2, label
-
-    def __len__(self):
-        return len(self.imgs)
-
 if (__name__ == '__main__'):
-    SavePath = path_MMI
-    ff = open(SavePath + 'pos_neg.txt','w')
-    f = open(SavePath+'out.txt','w')
-    ft = open(SavePath + 'train.txt','w')
-    fv = open(SavePath + 'val.txt','w')
-    ftest = open(SavePath+'test.txt','w')
+    ff = open(path_MMI + 'pos_neg.txt','w')
+    f = open(path_MMI+'out.txt','w')
+    ft = open(path_MMI + 'train.txt','w')
+    fv = open(path_MMI + 'val.txt','w')
+    ftest = open(path_MMI+'test.txt','w')
 
     
     for i in subject_idx:
-        produce_data(SavePath, i, subInfo[i-1][0], subInfo[i-1][1], "MMI_15aus")
+        produce_data(path_MMI, i, subInfo[i-1][0], subInfo[i-1][1], "MMI_15aus")
 
     print(Pos, Neg ,file = ff)
 
