@@ -1,67 +1,21 @@
-from __future__ import print_function
-import torch 
-import numpy
-import torchvision
-import torchvision.transforms as transforms
-import torch.nn as nn
-import torch.nn.functional as F 
-import torch.optim as optim
-import torchvision.models as models
-import torch.utils.data 
-from sklearn.cross_validation import train_test_split
-from sklearn.metrics import hamming_loss
-from PIL import Image
-import copy
-import numpy as np
-import sys, getopt
-import time
-import os
-import os.path
-
-import time
-
-print(torch.__version__)
-
-
-dataset_dir = ''
-
-input_size = 64
-
-num_classes = 6
-
-batch_size = 64
-
-learning_rate = 0.003
-
-num_epochs = 1000
-
-print_every = 10
-
-feature_extract = True
-
-from cv2 import WINDOW_NORMAL
 import sys
 import cv2
-import glob 
-import time
 import os
-import math
-from sklearn.externals import joblib
-from sklearn.model_selection import LeaveOneGroupOut
-from sklearn import svm
+import dlib
 import numpy as np
 from PIL import Image
-import threading
-from sklearn.decomposition import FastICA
 import xml.dom.minidom
+
 subInfo = [[1,120],[119,245],[245,351],[351,471],[471,580],[580,690],[689,795],[793,860],[859,965],[964,1067],
 [1067,1142],[1142,1215],[1215,1287],[1287,1416],[1416,1500],[1500,1569]]
 
 left_right = [2,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0] # 1 represent the face is in the right half picture 0 left
 
-subject_train = [1,2,3,4,5,6,9,14] 
-subject_val = [7,8,15,16]
-subject_test = [10,11,12,13]
+# subject_train = [1,2,3,4,5,6,9,14] 
+# subject_val = [7,8,15,16]
+# subject_test = [10,11,12,13]
+
+subject_idx = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
 AU = [1,2,4,5,6,7,9,10,12,17,23,24,25,26,43]
 Pos = np.zeros([17,len(AU)])
@@ -77,7 +31,7 @@ def _locate_faces(image):
         minNeighbors=15,
         minSize=(70, 70)
     )
-    return faces  # list of (x, y, w, h)
+    return faces
 
 def produce_data(SavePath, SubNum, subDown, subUp, status):
     print ("Subject: ", SubNum)
@@ -104,7 +58,6 @@ def produce_data(SavePath, SubNum, subDown, subUp, status):
 
         dom  = xml.dom.minidom.parse(LabelPath)
         root = dom.documentElement
-        #FrameNum = root.getAttribute('NumFrames')
         ty = []
         ActionUnit = root.getElementsByTagName('ActionUnit')
         for au in ActionUnit:
@@ -114,9 +67,7 @@ def produce_data(SavePath, SubNum, subDown, subUp, status):
             if str(AU[index]) in ty: # 4 here means au4
                 print ("Session", SessionNum, "labeled with au",AU[index])
             else:
-                #print "Session", SessionNum, "passed with no au4"
                 continue
-            #count
             mXs = []
             mYs = []
             vc = cv2.VideoCapture(VideoPath)
@@ -136,7 +87,6 @@ def produce_data(SavePath, SubNum, subDown, subUp, status):
             else:
                 continue
 
-            #crop
             vc = cv2.VideoCapture(VideoPath)
             read_value, webcam_image = vc.read()
             cur_frame = 0
@@ -144,10 +94,8 @@ def produce_data(SavePath, SubNum, subDown, subUp, status):
 
             image = Image.fromarray(webcam_image)
             width, height = image.size[:2]
-            #print(width,height)
             box_1 = (0,0,width/2,height)
             box_2 = (width/2,0,width,height)
-            #print(box_1,box_2)
             SavePath4 = ''
 
             while read_value:
@@ -155,36 +103,12 @@ def produce_data(SavePath, SubNum, subDown, subUp, status):
                 cur_frame += 1  
 
                 if(cur_frame == FrameNum/3):
-                    '''
-                    image = Image.fromarray(webcam_image)
-                    if(left_right[SubNum] == 0):
-                        image = image.crop(box_1)
-                    else: image = image.crop(box_2)
 
-                    wtmp, htmp = image.size[:2]
-                    box = (0, My-wtmp/2, wtmp, My+wtmp/2)
-                    image = image.crop(box)
-
-                    image1 = np.array(image)
-                    '''
                     SavePath4 = SavePath+"sub"+str(SubNum)+"Session"+str(SessionNum)+'_'+str(i)+".png"
-                    #cv2.imwrite(SavePath4, image1)
 
                 if(cur_frame > FrameNum/3 and cur_frame < FrameNum *2 /3):
-                    '''
-                    image2 = Image.fromarray(webcam_image)
-                    if(left_right[SubNum] == 0):
-                        image2 = image2.crop(box_1)
-                    else: image2 = image2.crop(box_2)
-                    
-                    wtmp, htmp = image2.size[:2]
-                    box = (0, My-wtmp/2, wtmp, My+wtmp/2)
-                    image2 = image2.crop(box)
 
-                    image2 = np.array(image2)
-                    '''
                     SavePath5 = SavePath+"sub"+str(SubNum)+"Session"+str(SessionNum)+'_'+str(i)+".png"
-                    #cv2.imwrite(SavePath5,image2)
 
                     res = []
                     for j in range(len(AU)):
@@ -273,8 +197,6 @@ if (__name__ == '__main__'):
     fv = open(SavePath + 'val.txt','w')
     ftest = open(SavePath+'test.txt','w')
 
-    # for i in range(1, 17):
-    #     print(i, count_session(i, subInfo[i-1][0], subInfo[i-1][1]))
     
     for i in subject_train:
         produce_data(SavePath, i, subInfo[i-1][0], subInfo[i-1][1], "train")
@@ -289,16 +211,3 @@ if (__name__ == '__main__'):
     ft.close()
     fv.close()
     ftest.close()
-
-    '''
-    print("Initializing Datasets and Dataloaders...")
-    data_dir = path_MMI
-    f = {x: data_dir + x + '.txt' for x in ['train', 'val']}
-    image_datasets = {x:MyDataset(root = SavePath , datatxt = x +".txt") for x in ['train','val']}
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=4) for x in ['train', 'val']}
-    phase = "train"
-    i = 0
-    for img1,img2, labels in dataloaders[phase]:
-        i += 1
-        if(i >3):break
-    '''
