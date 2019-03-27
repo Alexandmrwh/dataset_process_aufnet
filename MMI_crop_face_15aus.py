@@ -24,14 +24,15 @@ path_MMI = "/home/ubuntu/AU-WorkSite/FAC_DataBase/MMI_cropped/"
 
 faceDet = cv2.CascadeClassifier("/home/ubuntu/AU-WorkSite/Expri11.30/haarcascades/haarcascade_frontalface_default.xml")
 
-def _locate_faces(image):
-    faces = faceDet.detectMultiScale(
-        image,
-        scaleFactor=1.1,
-        minNeighbors=15,
-        minSize=(70, 70)
-    )
-    return faces
+def _locate_faces(frame):
+    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	faceDetector = dlib.get_frontal_face_detector()
+	face = faceDetector(frame_gray, 1)
+	if len(face) == 0:
+		print("No face detected in frame{}".format(t))
+		continue
+	left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
+	return left, top, right, bottom
 
 def produce_data(SavePath, SubNum, subDown, subUp, status):
     print ("Subject: ", SubNum)
@@ -198,12 +199,9 @@ if (__name__ == '__main__'):
     ftest = open(SavePath+'test.txt','w')
 
     
-    for i in subject_train:
-        produce_data(SavePath, i, subInfo[i-1][0], subInfo[i-1][1], "train")
-    for i in subject_val:
-        produce_data(SavePath, i, subInfo[i-1][0], subInfo[i-1][1], "val")
-    for i in subject_test:
-        produce_data(SavePath, i, subInfo[i-1][0], subInfo[i-1][1], "test")
+    for i in subject_idx:
+        produce_data(SavePath, i, subInfo[i-1][0], subInfo[i-1][1], "MMI_15aus")
+
     print(Pos, Neg ,file = ff)
 
     ff.close()
