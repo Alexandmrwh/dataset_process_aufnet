@@ -4,9 +4,9 @@ path_DISFA = '../DISFA_10aus/DISFA_face_crop_10aus/'
 path_result = '../DISFA_10aus/'
 stride = 2
 au_num = 10
-train_idx = ['1']
-val_idx=['2']
-test_idx=['3']
+train_idx = [2,3,4,6,7,8,12,13,17,18,23,26,28,29,30,32]
+val_idx=[1,5,9,10,11,14,15,16,19,20,21,22,24,25,27,31]
+
 
 def split(type):
     data = open(path_result+type+'.txt','w')
@@ -41,10 +41,10 @@ def split(type):
 if __name__ == '__main__':
     train = 'train'
     val = 'val'
-    test = 'test'
+    # test = 'test'
     split(train)
     split(val)
-    split(test)
+    # split(test)
 
 
 
