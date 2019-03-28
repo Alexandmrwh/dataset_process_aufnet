@@ -1,117 +1,52 @@
-path_DISFA = './'
-au_number = 10
-au_idx = ['1','2','4','5','6','9','12','17','24','25']
+import numpy as np
+import os
+path_DISFA = '../DISFA_10aus/DISFA_face_crop_10aus/'
+path_result = '../DISFA_10aus/'
+stride = 2
+au_num = 10
+train_idx = ['1']
+val_idx=['2']
+test_idx=['3']
 
-def split():
-    train_idx = ['SN001']
-    val_idx=['SN002']
-    test_idx=['SN003']
+def split(type):
+    data = open(path_result+type+'.txt','w')
+    if type == 'train':
+        type_idx = train_idx
+    elif type == 'val':
+        type_idx = val_idx
+    elif type == 'test':
+        type_idx = test_idx
 
+    for session_idx in type_idx:
+        txt_name = str(session_idx).zfill(2)
+        session_label_path = path_DISFA + "disfa_10aus_session_{}.txt".format(txt_name)
+        print(session_label_path)
+        if os.path.isfile(session_label_path):
+            session_label = open(session_label_path,'r')
+            all_samples = session_label.readlines()
+            sample_num = len(all_samples)
+            aus = np.zeros(10)
+            for i in range(0, sample_num-stride):
+                line1 = all_samples[i]
+                frameIdx1, aus[0], aus[1], aus[2], aus[3], \
+                           aus[4], aus[5], aus[6], aus[7], aus[8], aus[9]= line1.split()
+                aus = aus.astype(np.int)
+                line2 = all_samples[i+stride]
+                frameIdx2, _, _, _, _, \
+                           _, _, _, _, _, _, = line2.split()
+                print(frameIdx1, frameIdx2, aus[0], aus[1], aus[2], aus[3], \
+                           aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], file=data)
+    data.close()
 
-    label = open(path_DISFA+'all_labels.txt','r')
-
-    total_data = open(path_DISFA+'total.txt','w')
-    test_data = open(path_DISFA+'test.txt','w')
-    val_data = open(path_DISFA+'val.txt','w')
-    train_data = open(path_DISFA+'train.txt','w')
-    lines = []
-
-    ## the first line
-    tmp = label.readline()
-    lines.append(tmp)
-    line = lines[0]
-    line = line.strip('\n')
-    line = line.rstrip()
-    words = line.split()
-
-    img_path = words[0]
-    item_name = img_path.split('/')[-2]
-    img_name = img_path.split('/')[-1]
-    au_label = ''
-    for au in range(au_number):
-        au_label = au_label+' '+words[au+1]
-    au_label_list = [words[au] for au in range(1,1+au_number)]
-
-    lines[0] = [item_name,img_name,au_label,au_label_list]
-
-    # the loop
-    while True:
-        tmp = label.readline()
-
-        # EOF
-        if tmp==None or tmp == '':
-            label.close()
-            total_data.close()
-            train_data.close()
-            val_data.close()
-            test_data.close()
-            return
-            
-        lines.append(tmp)
-        print('_______________________')
-        print(lines)
-        for i in range(1,2):
-            line = lines[i]
-            line = line.strip('\n')
-            line = line.rstrip()
-            words = line.split()
-
-            img_path = words[0]
-            item_name = img_path.split('/')[-2]
-            img_name = img_path.split('/')[-1]
-            au_label = ''
-            for au in range(au_number):
-                au_label = au_label+' '+words[au+1]
-            au_label_list = [words[au] for au in range(1,7)]
-
-            lines[i] = [item_name,img_name,au_label,au_label_list]
-
-        # if from different items, abort this
-        if lines[0][0]!=lines[1][0]:
-            lines.remove(lines[0])
-            continue
-
-        
-        readPath = './'+item_name+'/'+img_name
-        img = cv2.imread(readPath)
-        try:
-            w,h,c = img.shape
-            cropped=img[0:w,int((h-w)/2):int((h+w)/2)]
-        except:
-            lines.remove(lines[0])
-            continue
+if __name__ == '__main__':
+    train = 'train'
+    val = 'val'
+    test = 'test'
+    split(train)
+    split(val)
+    split(test)
 
 
-        if lines[0][0] in test_idx:
-            print('./test/'+lines[0][1],\
-                        './test/'+lines[1][1],\
-                        lines[0][2],file=test_data)
-            if os.path.isfile('./test/'+lines[0][1]):
-                lines.remove(lines[0])
-                continue;
-            cv2.imwrite('./test/'+lines[0][1],cropped)
 
-        elif lines[0][0] in val_idx:
-            print('./val/'+lines[0][1],\
-                        './val/'+lines[1][1],\
-                        lines[0][2],file=val_data)
-            if os.path.isfile('./val/'+lines[0][1]):
-                lines.remove(lines[0])
-                continue;
-            cv2.imwrite('./val/'+lines[0][1],cropped)
 
-        else:
-
-            print('./train/'+lines[0][1],\
-                        './train/'+lines[1][1],\
-                        lines[0][2],file=train_data)
-            if os.path.isfile('./train/'+lines[0][1]):
-                lines.remove(lines[0])
-                continue;
-            cv2.imwrite('./train/'+lines[0][1],cropped)
-
-        print('./total/'+lines[0][1],\
-                        './total/'+lines[1][1],\
-                        lines[0][2],file=total_data)
-        print("remove!!!",lines[0])
-        lines.remove(lines[0])
+    
