@@ -1,7 +1,9 @@
 import numpy as np
 import os
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
-minor_au = [1, 2, 4, 9, 12]
+minor_au = [1, 2, 25]
+minor_au_idx = [0, 1, 8]
+
 def pick_minor_au():
 	for idx in range(1, 33):
 		txt_name = str(idx).zfill(2)
