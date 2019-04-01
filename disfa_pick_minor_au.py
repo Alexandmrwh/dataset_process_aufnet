@@ -7,8 +7,8 @@ minor_au_idx = [0, 1, 5, 7, 8]
 def pick_minor_au():
 	for idx in range(1, 33):
 		txt_name = str(idx).zfill(2)
-		session_label_path = "../DISFA_10aus/DISFA_face_crop_10aus/disfa_10aus_session_{}.txt".format(txt_name)
-		picked_label_path = "../DISFA_10aus/DISFA_picked_label/disfa_10aus_picked_{}.txt".format(txt_name)
+		session_label_path = "../DISFA_10aus/DISFA_face_crop_10aus/DISFA_all_label/disfa_10aus_session_{}.txt".format(txt_name)
+		picked_label_path = "../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/disfa_10aus_picked_{}.txt".format(txt_name)
 
 		# read the label file of each session
 		if os.path.isfile(session_label_path):
