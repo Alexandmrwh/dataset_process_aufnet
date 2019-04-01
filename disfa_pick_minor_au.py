@@ -1,8 +1,8 @@
 import numpy as np
 import os
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
-minor_au = [1, 2, 25]
-minor_au_idx = [0, 1, 8]
+minor_au = [1, 2, 9, 17, 25]
+minor_au_idx = [0, 1, 5, 7, 8]
 
 def pick_minor_au():
 	for idx in range(1, 33):
@@ -21,7 +21,7 @@ def pick_minor_au():
 					au_pos_tmp[2], au_pos_tmp[3], \
 					au_pos_tmp[4], au_pos_tmp[5], au_pos_tmp[6],\
 				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9]= lines.split()
-				if int(au_pos_tmp[0]) == 1 or int(au_pos_tmp[1]) == 1 or int(au_pos_tmp[5]) == 1 or int(au_pos_tmp[8]) == 1:
+				if int(au_pos_tmp[0]) == 1 or int(au_pos_tmp[1]) == 1 or int(au_pos_tmp[5]) == 1 or int(au_pos_tmp[7]) == 1 or int(au_pos_tmp[8]) == 1:
 					print(lines, file=picked_data)
 
 
