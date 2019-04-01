@@ -79,9 +79,9 @@ def get_picked_meta_data():
 
 
 if __name__ == '__main__':
-	get_meta_data()
+	# get_meta_data()
 	# get_all_labels()
-	# get_picked_meta_data()
+	get_picked_meta_data()
 			
 			
 
