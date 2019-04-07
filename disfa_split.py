@@ -2,7 +2,7 @@ import numpy as np
 import os
 path_DISFA = '../DISFA_10aus/DISFA_face_crop_10aus/'
 path_DISFA_picked_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
-path_result = '../DISFA_10aus_missingrate0.25/'
+path_result = '../DISFA_10aus_missingrate0.25_'
 stride = 4 # missing rate = 0.25
 au_num = 10
 train_idx = [2,3,4,6,7,8,12,13,17,18,23,26,28,29,30,32]
