@@ -31,13 +31,13 @@ def split(type):
                 line1 = all_samples[i]
                 frameIdx1, aus[0], aus[1], aus[2], aus[3], \
                            aus[4], aus[5], aus[6], aus[7], aus[8], aus[9]= line1.split()
-                    for j in range(1, stride):
-                    aus = aus.astype(np.int)
-                    line2 = all_samples[i+j]
-                    frameIdx2, _, _, _, _, \
-                            _, _, _, _, _, _, = line2.split()
-                    print(frameIdx1, frameIdx2, aus[0], aus[1], aus[2], aus[3], \
-                            aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], file=data)
+                for j in range(1, stride):
+                aus = aus.astype(np.int)
+                line2 = all_samples[i+j]
+                frameIdx2, _, _, _, _, \
+                        _, _, _, _, _, _, = line2.split()
+                print(frameIdx1, frameIdx2, aus[0], aus[1], aus[2], aus[3], \
+                        aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], file=data)
     data.close()
 
 if __name__ == '__main__':
