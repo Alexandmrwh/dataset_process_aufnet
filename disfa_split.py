@@ -1,9 +1,12 @@
 import numpy as np
 import os
 path_DISFA = '../DISFA_10aus/DISFA_face_crop_10aus/'
-path_DISFA_picked_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
-path_result = '../DISFA_10aus_missingrate0.25_'
-stride = 4 # missing rate = 0.25
+# path_DISFA_picked_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
+path_DISFA_all_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
+path_result = '../DISFA_10aus_ori_missingrate0.2_'
+# stride = 4 # missing rate = 0.33
+# stride = 4 # missing rate = 0.25
+stride = 5 # missing rate = 0.2
 au_num = 10
 train_idx = [2,3,4,6,7,8,12,13,17,18,23,26,28,29,30,32]
 val_idx=[1,5,9,10,11,14,15,16,19,20,21,22,24,25,27,31]
@@ -20,7 +23,8 @@ def split(type):
 
     for session_idx in type_idx:
         txt_name = str(session_idx).zfill(2)
-        session_label_path = path_DISFA_picked_label + "disfa_10aus_picked_{}.txt".format(txt_name)
+        # session_label_path = path_DISFA_picked_label + "disfa_10aus_picked_{}.txt".format(txt_name)
+        session_label_path = path_DISFA_all_label + "disfa_10aus_session_{}.txt".format(txt_name)
         print(session_label_path)
         if os.path.isfile(session_label_path):
             session_label = open(session_label_path,'r')
