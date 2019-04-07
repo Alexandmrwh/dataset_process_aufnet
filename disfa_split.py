@@ -2,7 +2,7 @@ import numpy as np
 import os
 path_DISFA = '../DISFA_10aus/DISFA_face_crop_10aus/'
 # path_DISFA_picked_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
-path_DISFA_all_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
+path_DISFA_all_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_all_label/'
 path_result = '../DISFA_10aus_ori_missingrate0.2_'
 # stride = 4 # missing rate = 0.33
 # stride = 4 # missing rate = 0.25
