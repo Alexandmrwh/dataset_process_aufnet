@@ -3,9 +3,10 @@ import os
 path_DISFA = '../DISFA_10aus/DISFA_face_crop_10aus/'
 # path_DISFA_picked_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/'
 path_DISFA_all_label = '../DISFA_10aus/DISFA_face_crop_10aus/DISFA_all_label/'
-path_result = '../DISFA_10aus_ori_missingrate0.25_'
+path_result = '../DISFA_10aus_ori_missingrate0.5_'
+stride = 2 # missing rate = 0.5
 # stride = 3 # missing rate = 0.33
-stride = 4 # missing rate = 0.25
+# stride = 4 # missing rate = 0.25
 # stride = 5 # missing rate = 0.2
 au_num = 10
 train_idx = [2,3,4,6,7,8,12,13,17,18,23,26,28,29,30,32]
