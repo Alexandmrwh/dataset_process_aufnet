@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 import os
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 
@@ -77,6 +78,7 @@ def get_picked_meta_data():
 
 def get_prob_distribution():
 	prob_distribution = open("../data/DISFA/DISFA_prob_distribution.txt", 'w')
+	prob_distribution_pkl = open("../data/DISFA/DISFA_prob_distribution.pkl", 'wb')
 	single_occurance = np.zeros(len(au_idx))
 	co_occurance = np.zeros([len(au_idx), len(au_idx)])
 	print(au_idx, file=prob_distribution)
@@ -104,6 +106,14 @@ def get_prob_distribution():
 							co_occurance[j][i] += 1
 	print(single_occurance.astype(int), file=prob_distribution)
 	print(co_occurance.astype(int), file=prob_distribution)
+
+	pkl_dict = {'nums': single_occurance.astype(int),
+				'adj': co_occurance.astype(int)}
+	pickle.dump(pkl_dict, prob_distribution_pkl)
+
+	prob_distribution.close()
+	prob_distribution_pkl.close()
+
 
 if __name__ == '__main__':
 	# get_meta_data()
