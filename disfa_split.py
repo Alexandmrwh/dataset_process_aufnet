@@ -19,8 +19,8 @@ def split(type):
         type_idx = train_idx
     elif type == 'val':
         type_idx = val_idx
-    elif type == 'test':
-        type_idx = test_idx
+    # elif type == 'test':
+    #     type_idx = test_idx
 
     for session_idx in type_idx:
         txt_name = str(session_idx).zfill(2)
