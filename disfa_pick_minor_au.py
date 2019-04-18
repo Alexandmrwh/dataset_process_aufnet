@@ -26,10 +26,6 @@ def pick_minor_au():
 						print(lines, file=picked_data)
 						break
 
-				# if int(au_pos_tmp[0]) == 1 or int(au_pos_tmp[1]) == 1 or int(au_pos_tmp[5]) == 1 or int(au_pos_tmp[7]) == 1 or int(au_pos_tmp[8]) == 1:
-				# 	print(lines, file=picked_data)
-
-
 if __name__ == '__main__':
 	pick_minor_au()
 			
