@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8
 
-'''
-This script is to split frames into images 
-'''
 import os
 import cv2
 import csv
