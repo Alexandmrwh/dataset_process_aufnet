@@ -34,6 +34,7 @@ def label_process():
                             au, intensity = lines.split()
                             au = int(au)
                             intensity = int(intensity)
+                            print(au, intensity)
                             
                             
 
