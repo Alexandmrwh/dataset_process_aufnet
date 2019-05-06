@@ -33,8 +33,8 @@ def label_process():
         SubLabelPath = CKPlusLabelPath+'S'+str(SubIdx).zfill(3)+'/'
         SubImagePath = CKPlusImagePath+'S'+str(SubIdx).zfill(3)+'/'
         if os.path.isdir(SubLabelPath):
-            print('=====> processing subject: {}'.format(SubIdx))
             newLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'.txt', 'w')
+            print('=====> processing subject: {}, results writing to: {}'.format(SubIdx, newLabel))
             # for each sequence, store the path to the sequence and its label to the new label file of the subject
             for SeqIdx in range(20):
                 _SeqLabelPath = SubLabelPath+str(SeqIdx).zfill(3)+'/'
