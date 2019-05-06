@@ -32,8 +32,8 @@ def label_process():
                         SeqLabel = open(SeqLabelPath, 'r')
                         for _, lines in enumerate(SeqLabel.readlines()):
                             au, intensity = lines.split()
-                            au = int(au)
-                            intensity = int(intensity)
+                            au = int(float(au))
+                            intensity = int(float(intensity))
                             print(au, intensity)
                             
                             
