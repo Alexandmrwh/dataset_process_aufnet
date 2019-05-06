@@ -27,10 +27,10 @@ def label_process():
             print('=====> processing subject: {}'.format(SubIdx))
             # for each sequence, store the path to the sequence and its label to the new label file of the subject
             for SeqIdx in range(20):
+                onehotLabel = np.zeros(len(au_idx))
                 _SeqLabelPath = SubLabelPath+str(SeqIdx).zfill(3)+'/'
                 SeqImagePath = SubImagePath+str(SeqIdx).zfill(3)+'/'
                 if os.path.isdir(_SeqLabelPath):
-                    onehotLabel = np.zeros(len(au_idx))
                     for txtName in os.listdir(_SeqLabelPath):
                         SeqLabelPath = _SeqLabelPath+txtName
                         SeqLabel = open(SeqLabelPath, 'r')
@@ -39,7 +39,7 @@ def label_process():
                             au = int(float(au))
                             # intensity = int(float(intensity))
                             onehotLabel[au_idx.index(au)] = 1
-                            print(SeqImagePath, onehotLabel)
+                print(SeqImagePath, onehotLabel)
                             
                             
                             
