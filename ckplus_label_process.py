@@ -35,6 +35,7 @@ def label_process():
         # for each existed subject, generate a label file recording each sequence and its label
         if os.path.isdir(SubLabelPath):
             SubNewLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'.txt', 'w')
+            print(SubNewLabel)
             print('=====> processing subject: {}, results writing to: {}'.format(SubIdx, SubNewLabel))
             # for each sequence, store the path to the sequence and its label to the new label file of the subject
             for SeqIdx in range(20):
@@ -51,7 +52,9 @@ def label_process():
                             # intensity = int(float(intensity))
                             onehotLabel[au_idx.index(au)] = 1
                             onehotLabelStr = ndarray2string(onehotLabel)
-                    print(SeqImagePath, onehotLabelStr, file=SubNewLabel)
+                    print(SeqImagePath, onehotLabelStr)
+                    # print(SeqImagePath, onehotLabelStr, file=SubNewLabel)
+
             SubNewLabel.close()
                             
                             
