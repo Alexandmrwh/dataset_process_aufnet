@@ -6,6 +6,7 @@ import cv2
 import csv
 import dlib
 import sys
+import numpy as np
 
 CKPlusAllLabels = '../data/Cohn-Kanade/CK+/CK+_all_label/'
 CKPlusImagePath = '../data/Cohn-Kanade/CK+/extended-cohn-kanade-images/cohn-kanade-images/'
@@ -23,18 +24,22 @@ def label_process():
         SubLabelPath = CKPlusLabelPath+'S'+str(SubIdx).zfill(3)+'/'
         if os.path.isdir(SubLabelPath):
             print('=====> processing subject: {}'.format(SubIdx))
-            # for each sequence
+            # for each sequence, store the path to the sequence and its label to the new label file of the subject
             for SeqIdx in range(20):
                 _SeqLabelPath = SubLabelPath+str(SeqIdx).zfill(3)+'/'
                 if os.path.isdir(_SeqLabelPath):
+                    onehotLabel = np.zeros(len(au_idx))
                     for txtName in os.listdir(_SeqLabelPath):
                         SeqLabelPath = _SeqLabelPath+txtName
                         SeqLabel = open(SeqLabelPath, 'r')
                         for _, lines in enumerate(SeqLabel.readlines()):
                             au, intensity = lines.split()
                             au = int(float(au))
-                            intensity = int(float(intensity))
-                            print(au, intensity)
+                            # intensity = int(float(intensity))
+                            onehotLabel[au_idx.index(au)] = 1
+                            print(SeqLabelPath, onehotLabel)
+                            
+                            
                             
                             
 
