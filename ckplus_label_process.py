@@ -14,8 +14,18 @@ CKPlusLabelPath = '../data/Cohn-Kanade/CK+/FACS_labels/FACS/'
 INT_MAX = sys.maxsize  
 INT_MIN = -sys.maxsize-1
 au_idx = [1, 2, 4, 5, 6, 7, 9 ,10 ,11, 12, 
-            13, 14, 15, 16, 17, 18, 20, 21, 23 , 24, 
+            13, 14, 15, 16, 17, 18, 20, 21, 22, 23 , 24, 
             25 ,26 , 27, 28, 29, 31, 34, 38, 39, 43, 45]
+
+def ndarray2string(label):
+    label = label.astype(int)
+    label_str = ' '
+    for num in label:
+        if num == 1:
+            label_str += ' 1'
+        elif num == 0:
+            label_str += ' 0'
+    return label_str
 
 def label_process():
     # for each subject, generate a label file recording each sequence and its label
@@ -39,18 +49,12 @@ def label_process():
                             au = int(float(au))
                             # intensity = int(float(intensity))
                             onehotLabel[au_idx.index(au)] = 1
-                    print(SeqImagePath, onehotLabel)
+                            onehotLabelStr = ndarray2string(onehotLabel)
+                    print(SeqImagePath, onehotLabelStr)
                             
                             
                             
                             
-
-                    
-                    
-
-
-
-
 
 
 
