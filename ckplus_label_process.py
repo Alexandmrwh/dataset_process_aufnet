@@ -15,7 +15,7 @@ INT_MAX = sys.maxsize
 INT_MIN = -sys.maxsize-1
 au_idx = [1, 2, 4, 5, 6, 7, 9 ,10 ,11, 12, 
             13, 14, 15, 16, 17, 18, 20, 21, 22, 23 , 24, 
-            25 ,26 , 27, 28, 29, 31, 34, 38, 39, 43, 45]
+            25 ,26 , 27, 28, 29, 31, 34, 38, 39, 43, 45, 62]
 
 def ndarray2string(label):
     label = label.astype(int)
