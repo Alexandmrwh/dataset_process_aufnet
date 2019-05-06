@@ -19,7 +19,7 @@ au_idx = [1, 2, 4, 5, 6, 7, 9 ,10 ,11, 12,
 def label_process():
     # for each subject, generate a label file recording each sequence and its label
     for SubIdx in range(1000):
-        newLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'/'+, 'w')
+        newLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'.txt', 'w')
         SubLabelPath = CKPlusLabelPath+'S'+str(SubIdx).zfill(3)+'/'
         if os.path.isdir(SubLabelPath):
             print('=====> processing subject: {}'.format(SubIdx))
@@ -32,6 +32,9 @@ def label_process():
                         SeqLabel = open(SeqLabelPath, 'r')
                         for _, lines in enumerate(SeqLabel.readlines()):
                             au, intensity = lines.split()
+                            au = int(au)
+                            intensity = int(intensity)
+                            
                             
 
                     
