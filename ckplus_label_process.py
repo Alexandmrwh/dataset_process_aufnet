@@ -30,11 +30,11 @@ def ndarray2string(label):
 def label_process():
     # for each subject, generate a label file recording each sequence and its label
     for SubIdx in range(1000):
-        newLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'.txt', 'w')
         SubLabelPath = CKPlusLabelPath+'S'+str(SubIdx).zfill(3)+'/'
         SubImagePath = CKPlusImagePath+'S'+str(SubIdx).zfill(3)+'/'
         if os.path.isdir(SubLabelPath):
             print('=====> processing subject: {}'.format(SubIdx))
+            newLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'.txt', 'w')
             # for each sequence, store the path to the sequence and its label to the new label file of the subject
             for SeqIdx in range(20):
                 _SeqLabelPath = SubLabelPath+str(SeqIdx).zfill(3)+'/'
