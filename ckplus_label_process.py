@@ -50,7 +50,7 @@ def label_process():
                             # intensity = int(float(intensity))
                             onehotLabel[au_idx.index(au)] = 1
                             onehotLabelStr = ndarray2string(onehotLabel)
-                    print(SeqImagePath, onehotLabelStr)
+                    print(SeqImagePath, onehotLabelStr, file=newLabel)
                             
                             
                             
