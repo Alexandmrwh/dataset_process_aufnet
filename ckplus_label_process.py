@@ -35,7 +35,6 @@ def label_process():
         # for each existed subject, generate a label file recording each sequence and its label
         if os.path.isdir(SubLabelPath):
             SubNewLabel = open(CKPlusAllLabels+'S'+str(SubIdx).zfill(3)+'.txt', 'w')
-            print(SubNewLabel)
             print('=====> processing subject: {}, results writing to: {}'.format(SubIdx, SubNewLabel))
             # for each sequence, store the path to the sequence and its label to the new label file of the subject
             for SeqIdx in range(20):
