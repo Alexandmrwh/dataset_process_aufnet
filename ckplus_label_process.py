@@ -84,9 +84,7 @@ def picked_label_process():
 								onehotLabel[au_idx_lair.index(au)] = 1
 								onehotLabelStr = ndarray2string(onehotLabel)
 						print(SeqImagePath, onehotLabelStr, file=SubNewLabel)
-			SubNewLabel.close()              
-                            
-                            
+			SubNewLabel.close()
 
 
 if __name__ == '__main__':
