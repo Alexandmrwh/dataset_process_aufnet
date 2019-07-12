@@ -24,6 +24,7 @@ def all_label_process():
             # for each sequence
             for SeqIdx in range(20):
             	left, top, right, bottom = 0.0, 0.0, 0.0, 0.0
+            	minx, miny, maxx, maxy = INT_MAX, INT_MAX, INT_MIN, INT_MIN
             	SeqImagePath = SubImagePath+str(SeqIdx).zfill(3)+'/'
             	if os.path.isdir(SeqImagePath):
             		for framename in os.listdir(SeqImagePath):
@@ -32,21 +33,20 @@ def all_label_process():
             			frame = cv2.imread(framepath)
             			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             			faceDetector = dlib.get_frontal_face_detector()
-						face = faceDetector(frame_gray, 1)
-						if len(face) == 0:
-							print("No face detected in frame{}".format(t))
-							continue
-						left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
-
-						# update the largest rect in one session
-						if left < minx:
-							minx = left
-						if top < miny:
-							miny = top
-						if right > maxx:
-							maxx = right
-						if bottom > maxy:
-							maxy = bottom
+            			face = faceDetector(frame_gray, 1)
+            			if len(face) == 0:
+            				print("No face detected in frame{}".format(t))
+            				continue
+            				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
+            				# update the largest rect in one session
+        				if left < minx:
+        					minx = left
+        				if top < miny:
+        					miny = top
+        				if right > maxx:
+        					maxx = right
+        				if bottom > maxy:
+        					maxy = bottom
 
 						# crop face and save
 						for framename in os.listdir(SeqImagePath):
