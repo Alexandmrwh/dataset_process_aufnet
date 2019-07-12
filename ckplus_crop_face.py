@@ -35,25 +35,25 @@ def all_label_process():
             			faceDetector = dlib.get_frontal_face_detector()
             			face = faceDetector(frame_gray, 1)
             			if len(face) == 0:
-            				print("No face detected in frame{}".format(t))
-            				continue
-        				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
+					print("No face detected in frame{}".format(t))
+					continue
+				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
 
-        				if left < minx:
-            				minx = left
-        				if top < miny:
-        					miny = top
-    					if right > maxx:
-							maxx = right
-						if bottom > maxy:
-							maxy = bottom
+        			if left < minx:
+					minx = left
+        			if top < miny:
+        				miny = top
+    				if right > maxx:
+					maxx = right
+				if bottom > maxy:
+					maxy = bottom
 
-						for framename in os.listdir(SeqImagePath):
-							framepath = SeqImagePath + framename
-							saveImagePath = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+framename
-							print("saving ", saveImagePath)
-							frame = cv2.imread(framepath)
-							cv2.imwrite(saveImagePath,frame[miny: maxy, minx: maxx])
+			for framename in os.listdir(SeqImagePath):
+				framepath = SeqImagePath + framename
+				saveImagePath = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+framename
+				print("saving ", saveImagePath)
+				frame = cv2.imread(framepath)
+				cv2.imwrite(saveImagePath,frame[miny: maxy, minx: maxx])
 
 
 
