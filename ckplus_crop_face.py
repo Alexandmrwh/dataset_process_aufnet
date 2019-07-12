@@ -37,7 +37,8 @@ def all_label_process():
             			if len(face) == 0:
             				print("No face detected in frame{}".format(t))
             				continue
-            				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
+            			left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
+            			
         				if left < minx:
         					minx = left
     					if top < miny:
