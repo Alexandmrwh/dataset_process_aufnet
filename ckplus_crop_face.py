@@ -24,15 +24,14 @@ def all_label_process():
             # for each sequence
             for SeqIdx in range(20):
             	left, top, right, bottom = 0.0, 0.0, 0.0, 0.0
-                SeqImagePath = SubImagePath+str(SeqIdx).zfill(3)+'/'
-
-                if os.path.isdir(SeqImagePath):
-                	for framename in os.listdir(SeqImagePath):
-	                	# detect face rect, return in [left, top, right, bottom]
-	                	framepath = SeqImagePath + framename
-	                	frame = cv2.imread(framepath)
-						frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-						faceDetector = dlib.get_frontal_face_detector()
+            	SeqImagePath = SubImagePath+str(SeqIdx).zfill(3)+'/'
+            	if os.path.isdir(SeqImagePath):
+            		for framename in os.listdir(SeqImagePath):
+            		# detect face rect, return in [left, top, right, bottom]
+            			framepath = SeqImagePath + framename
+            			frame = cv2.imread(framepath)
+            			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            			faceDetector = dlib.get_frontal_face_detector()
 						face = faceDetector(frame_gray, 1)
 						if len(face) == 0:
 							print("No face detected in frame{}".format(t))
@@ -49,13 +48,13 @@ def all_label_process():
 						if bottom > maxy:
 							maxy = bottom
 
-					# crop face and save
-					for framename in os.listdir(SeqImagePath):
-						framepath = SeqImagePath + framename
-						saveImagePath = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+framename
-						print("saving ", saveImagePath)
-						frame = cv2.imread(framepath)
-						cv2.imwrite(saveImagePath,frame[miny: maxy, minx: maxx])
+						# crop face and save
+						for framename in os.listdir(SeqImagePath):
+							framepath = SeqImagePath + framename
+							saveImagePath = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+framename
+							print("saving ", saveImagePath)
+							frame = cv2.imread(framepath)
+							cv2.imwrite(saveImagePath,frame[miny: maxy, minx: maxx])
 
 
 
