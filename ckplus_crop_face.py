@@ -38,17 +38,15 @@ def all_label_process():
             				print("No face detected in frame{}".format(t))
             				continue
             				left, top, right, bottom = face[0].left(), face[0].top(), face[0].right(), face[0].bottom()
-            				# update the largest rect in one session
         				if left < minx:
         					minx = left
-        				if top < miny:
-        					miny = top
-        				if right > maxx:
-        					maxx = right
-        				if bottom > maxy:
-        					maxy = bottom
+    					if top < miny:
+    						miny = top
+						if right > maxx:
+							maxx = right
+						if bottom > maxy:
+							maxy = bottom
 
-						# crop face and save
 						for framename in os.listdir(SeqImagePath):
 							framepath = SeqImagePath + framename
 							saveImagePath = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+framename
