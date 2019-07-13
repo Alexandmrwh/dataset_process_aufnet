@@ -8,7 +8,7 @@ import dlib
 import sys
 import numpy as np
 
-stride = 3
+stride = 4
  
 CKPlusNewImagePath = '../data/Cohn-Kanade/CK+/cropped_for_aufnet/'
 
@@ -36,10 +36,10 @@ def split():
                             continue
                         framelist.append(framename)
                     
-                    for i in range(0, len(framelist)-stride, stride):
-                        frame1 = framelist[i]
-                        frame2 = framelist[i+stride]
-                        print(frame1, frame2, file = data)
+                for i in range(0, len(framelist)-stride, stride):
+                    frame1 = framelist[i]
+                    frame2 = framelist[i+stride]
+                    print(frame1, frame2, file = data)
     data.close()
 
 if __name__ == "__main__":
