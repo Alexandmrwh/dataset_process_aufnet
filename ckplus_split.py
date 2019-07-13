@@ -36,7 +36,7 @@ def split():
                             continue
                         framelist.append(framename)
                     
-                    for i in range(0, len(framelist)-stride+1, stride):
+                    for i in range(0, len(framelist)-stride, stride):
                         frame1 = framelist[i]
                         frame2 = framelist[i+stride]
                         print(frame1, frame2, file = data)
