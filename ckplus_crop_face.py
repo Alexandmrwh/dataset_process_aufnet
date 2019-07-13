@@ -31,8 +31,8 @@ def process():
                 if os.path.isdir(SeqImagePath):
                     for framename in os.listdir(SeqImagePath):
                     # detect face rect, return in [left, top, right, bottom]
-			if os.path.splitext(framename)[-1][1:] != 'png':
-				continue 
+                        if os.path.splitext(framename)[-1][1:] != 'png':
+                            continue 
                         framepath = SeqImagePath + framename
                         print(framepath)
                         frame = cv2.imread(framepath)
