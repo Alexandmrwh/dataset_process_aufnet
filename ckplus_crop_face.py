@@ -54,7 +54,7 @@ def process():
                             maxy = bottom
 
                     for framename in os.listdir(SeqImagePath):
-                        if os.path.splitext(framename)[-1][1:] != 'png': 
+                        if os.path.splitext(framename[-1][1:] != 'png': 
                             continue
                         framepath = SeqImagePath + framename
                         saveImagefolder = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+str(SeqIdx).zfill(3)
