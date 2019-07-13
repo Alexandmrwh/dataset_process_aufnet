@@ -15,7 +15,7 @@ CKPlusNewImagePath = '../data/Cohn-Kanade/CK+/cropped_for_aufnet/'
 INT_MAX = sys.maxsize 
 INT_MIN = -sys.maxsize-1
 
-def split(type):
+def split():
     data = open(CKPlusNewImagePath+type+'.txt','w')
 
     # for each subject
