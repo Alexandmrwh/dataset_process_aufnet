@@ -35,7 +35,8 @@ def split():
                         if os.path.splitext(framename)[-1][1:] != 'png':
                             continue
                         framelist.append(framename)
-                    
+                
+                print(framelist)
                 for i in range(0, len(framelist)-stride, stride):
                     frame1 = framelist[i]
                     frame2 = framelist[i+stride]
