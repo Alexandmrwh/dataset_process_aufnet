@@ -16,7 +16,7 @@ INT_MAX = sys.maxsize
 INT_MIN = -sys.maxsize-1
 
 def split():
-    data = open(CKPlusNewImagePath+type+'.txt','w')
+    data = open(CKPlusNewImagePath+'finetuneflow'+'.txt','w')
 
     # for each subject
     for SubIdx in range(1000):
