@@ -36,11 +36,12 @@ def split():
                             continue
                         framelist.append(framename)
                 
-                print(framelist)
-                for i in range(0, len(framelist)-stride, stride):
+                framelist.sort()
+                for i in range(0, len(framelist)-stride):
+                    path = CKPlusNewImagePath+'S'+str(SubIdx).zfill(3)+'/'+str(SeqIdx).zfill(3)+'/'
                     frame1 = framelist[i]
                     frame2 = framelist[i+stride]
-                    print(frame1, frame2, file = data)
+                    print(path + frame1, path + frame2, file = data)
     data.close()
 
 if __name__ == "__main__":
