@@ -8,7 +8,6 @@ import dlib
 import sys
 import numpy as np
 
- 
 CKPlusImagePath = '../data/Cohn-Kanade/CK+/extended-cohn-kanade-images/cohn-kanade-images/'
 CKPlusNewImagePath = '../data/Cohn-Kanade/CK+/cropped_for_aufnet/'
 
