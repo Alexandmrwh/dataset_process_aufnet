@@ -11,11 +11,11 @@ CKPlusPickedLabels = '../data/Cohn-Kanade/CK+/CK+_Picked_aaai/'
 INT_MAX = sys.maxsize  
 INT_MIN = -sys.maxsize-1
 
-# au_idx_lair = [1, 2, 4, 5, 6, 
-# 				7, 9, 10, 12, 17, 
-# 				23, 24, 25, 26, 43]
+au_idx_lair = [1, 2, 4, 5, 6, 
+				7, 9, 10, 12, 17, 
+				23, 24, 25, 26, 43]
 
-au_idx_lair = [1, 2, 4, 5, 6, 7, 9, 12, 17, 23, 24, 25]
+# au_idx_lair = [1, 2, 4, 5, 6, 7, 9, 12, 17, 23, 24, 25]
 
 def get_meta_data():
 	total_meta_data = open(CKPlusPickedLabels+'CKPlus_meta_data.txt', 'w')
@@ -38,7 +38,8 @@ def get_meta_data():
 					au_pos_tmp[2], au_pos_tmp[3], \
 					au_pos_tmp[4], au_pos_tmp[5], au_pos_tmp[6],\
 				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9], \
-					 au_pos_tmp[10], au_pos_tmp[11] = lines.split()
+					au_pos_tmp[10], au_pos_tmp[11], au_pos_tmp[12],\
+					au_pos_tmp[13], au_pos_tmp[14] = lines.split()
 				for i in range(len(au_idx_lair)):
 					au_pos_sum[i] += int(au_pos_tmp[i])
 			for i in range(len(au_idx_lair)):
@@ -50,8 +51,8 @@ def get_meta_data():
 			sumidx += 1
 			print("subject {}:".format(subidx), au_pos_sum, "subject_session: {}".format(subject_session), file=total_meta_data)
 	
-	# print("total:", sum, "total session", total_session, file=total_meta_data)
-	# total_meta_data.close()
+	print("total:", sum, "total session", total_session, file=total_meta_data)
+	total_meta_data.close()
 	
 	sumcsvfile = open(CKPlusPickedLabels+'CKPlus_meta.csv', 'w')
 	writer = csv.writer(sumcsvfile, delimiter = ',')
