@@ -50,7 +50,6 @@ def get_meta_data():
 			sumcsv[sumidx][1:] = au_pos_sum
 			sumidx += 1
 			print("subject {}:".format(subidx), au_pos_sum, "subject_session: {}".format(subject_session), file=total_meta_data)
-	
 	print("total:", sum, "total session", total_session, file=total_meta_data)
 	total_meta_data.close()
 	

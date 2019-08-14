@@ -14,8 +14,9 @@ from ckplus_label_process import ndarray2string
 CKPlusNewImagePath = '../data/Cohn-Kanade/CK+/cropped_for_aufnet/'
 CKPlusPickedLabels = '../data/Cohn-Kanade/CK+/CK+_Picked_aaai/'
 CKPlus10folds = '../data/Cohn-Kanade/CK+/10folds/'
+CKPlusPickedImagesTxt = '../data/Cohn-Kanade/CK+/PickedImagesTxt/'
 
-stride = 4
+stride = 2
 INT_MAX = sys.maxsize 
 INT_MIN = -sys.maxsize-1
 au_idx_lair = [1, 2, 4, 5, 6, 7, 9, 10, 12, 17, 23, 24, 25, 26, 43]
@@ -35,7 +36,6 @@ def split4flow():
                 framelist = []
                 SeqImagePath = SubImagePath+str(SeqIdx).zfill(3)+'/'
                 if os.path.isdir(SeqImagePath):
-
                     # for each image, save path to a list
                     for framename in os.listdir(SeqImagePath):
                         if os.path.splitext(framename)[-1][1:] != 'png':
@@ -73,7 +73,7 @@ def splitnew(splits_in, au, audict, splitres):
     return new_splits, new_splitsres
 
 # generate 10 lists containing the subject id
-def generate10splits(timestamp):
+def generate10splits(expname):
     metafile = np.loadtxt(CKPlusPickedLabels + 'CKPlus_meta.csv', dtype = np.int, delimiter = ',')
     print(metafile)
 
@@ -122,7 +122,7 @@ def generate10splits(timestamp):
         splitres_new[i][11] = sum(splitres_new[i][:])
         splitres_new[i][10] = sum(appeartimes[i])            
 
-    logfile = open(CKPlus10folds+ timestamp + '10fold-split.txt', 'a+')
+    logfile = open(CKPlus10folds+ expname + '10fold-split.txt', 'a+')
     print(splitres_new, ausplits_new, file=logfile)
     logfile.close()
 
@@ -132,12 +132,12 @@ def generate10splits(timestamp):
     return ausplits_new
 
 # generate one txt for each fold
-def generate10folds(timestamp, ausplits, stride):
+def generate10folds(expname, ausplits, stride):
 
     # for each fold, open log txt
     numfold = len(ausplits)
     for foldidx in range(numfold):
-        foldtxt = open(CKPlus10folds + timestamp +str(foldidx)+'.txt', 'w')
+        foldtxt = open(CKPlus10folds + expname +str(foldidx)+'.txt', 'w')
         subs = ausplits[foldidx]
         # for each subject
         for sub in subs:
@@ -159,48 +159,50 @@ def generate10folds(timestamp, ausplits, stride):
                     squenceid = squencepath[-4: -1]
                     squencelabel[squenceid] = squenceau
                 
-                # for each sequence
-                for SeqIdx in range(20):
+                SeqImagePath = CKPlusPickedImagesTxt+'S'+str(sub).zfill(3)+'/'
+                if os.path.isdir(SeqImagePath):
+                    allseq = os.listdir(SeqImagePath)
+                    allseq.sort()
+                    # for each sequence
                     framelist = []
-                    SeqImagePath = SubImagePath+str(SeqIdx).zfill(3)+'/'
-                    if os.path.isdir(SeqImagePath):
-                        # for each image, save path to a list
-                        for framename in os.listdir(SeqImagePath):
-                            if os.path.splitext(framename)[-1][1:] != 'png':
-                                continue
-                            framelist.append(framename)
-                    framelist.sort()
-                    for i in range(0, len(framelist)-stride+1, stride):
-                        path = CKPlusNewImagePath+'S'+str(sub).zfill(3)+'/'+str(SeqIdx).zfill(3)+'/'
-                        frame1 = framelist[i]
-                        for j in range(1, stride):
-                            frame2 = framelist[i+j]
-                            label = squencelabel[str(SeqIdx).zfill(3)]
-                            print(path + frame1, path + frame2, label, file=foldtxt)
-
+                    for seq in allseq:
+                        seqpath = SeqImagePath + seq
+                        seqimages = open(seqpath, 'r')
+                        for _, lines in enumerate(seqimages.readlines()):
+                            framelist.append(lines)
+                        framelist.sort()
+                        for i in range(0, len(framelist)-stride+1, stride):
+                            frame1 = framelist[i]
+                            for j in range(1, stride):
+                                frame2 = framelist[i+j]
+                                label = squencelabel[str(seq[0:3]).zfill(3)]
+                                print(frame1.strip('\n'), frame2.strip('\n'), label, file=foldtxt)
         foldtxt.close()
 
-def generatetrainvaltxt(timestamp, valfold):
-    traintxt = open(CKPlus10folds + timestamp +'train_e'+ str(valfold) + '.txt', 'w')
-    valtxt = open(CKPlus10folds + timestamp +'val_'+ str(valfold) + '.txt', 'w')
+def generatetrainvaltxt(expname, valfold):
+    traintxt = open(CKPlus10folds + expname + "fold" + str(i) +'/' + 'train.txt', 'w')
+    valtxt = open(CKPlus10folds + expname + "fold" + str(i) +'/' + 'val.txt', 'w')
 
-    valfoldtxt = open(CKPlus10folds + timestamp + str(valfold)+'.txt')
-    for t, lines in enumerate(valfoldtxt.readlines()):
-        print(lines, file=valtxt)
-    
+    valset = open(CKPlus10folds + expname + str(valfold)+'.txt')
+    for t, lines in enumerate(valset.readlines()):
+        print(lines.strip('\n'), file=valtxt)
+
     all = [x for x in range(10)]
     trainset = list((set(all)) - set([valfold]))
     for foldidx in trainset:
-        foldtxt = open(CKPlus10folds + timestamp + str(foldidx) + '.txt')
+        foldtxt = open(CKPlus10folds + expname + str(foldidx) + '.txt')
         for t, lines in enumerate(foldtxt.readlines()):
-            print(lines, file=traintxt)
+            print(lines.strip('\n'), file=traintxt)
 
 if __name__ == "__main__":
     # split4flow()
-    timestamp = str(int((time.time()))) + '/'
-    os.makedirs(CKPlus10folds + timestamp)
+    expnum = "EXP" + str(1) + '/'
+    expname = str(expnum)
+    os.makedirs(CKPlus10folds + expname)
 
-    ausplits = generate10splits(timestamp)
-    generate10folds(timestamp, ausplits, stride)
-    generatetrainvaltxt(timestamp, valfold=0)
+    ausplits = generate10splits(expname)
+    generate10folds(expname, ausplits, stride)
+    for i in range(10):
+        os.makedirs(CKPlus10folds + expname + "fold" + str(i) +'/')
+        generatetrainvaltxt(expname, valfold=i)
     
