@@ -115,7 +115,7 @@ def pick_images_with_au():
                         nums = 5
                     imageprefix = "S"+str(SubIdx).zfill(3)+"_"+str(SeqIdx).zfill(3)+"_"
                     for imageindex in range(imagenum-nums+1, imagenum+1):
-                        picked_image = SubImagePath+imageprefix+str(imageindex).zfill(8)+'.png'
+                        picked_image = SeqImagePath+imageprefix+str(imageindex).zfill(8)+'.png'
                         print(picked_image, file=SubPickedImage)
 
             SubPickedImage.close()
