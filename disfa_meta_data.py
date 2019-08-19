@@ -1,17 +1,22 @@
 import numpy as np
 import pickle
 import os
+import csv
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 
+DisfaAllLabelPath = "../data/DISFA/DISFA_all_label/"
+
 def get_meta_data():
-	total_meta_data = open("../DISFA_10aus/DISFA_meta_data.txt",'w')
+	total_meta_data = open(DisfaAllLabelPath + "DISFA_meta_data.txt",'w')
 	print(au_idx, file=total_meta_data)
 	sum = np.zeros(10)
+	sumcsv = np.zeros(shape = [27, len(au_idx)+1], dtype=int)
+	sumidx = 0
 	for idx in range(1, 33):
 		au_pos_sum = np.zeros(10)
 		total_frame = 0
 		txt_name = str(idx).zfill(2)
-		session_label_path = "../DISFA_10aus/DISFA_face_crop_10aus/DISFA_all_label/disfa_10aus_session_{}.txt".format(txt_name)
+		session_label_path = DisfaAllLabelPath + "disfa_10aus_session_{}.txt".format(txt_name)
 
 		# read the label file of each session
 		if os.path.isfile(session_label_path):
@@ -25,12 +30,21 @@ def get_meta_data():
 				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9]= lines.split()
 				for i in range(10):
 					au_pos_sum[i] += int(au_pos_tmp[i])
-
+				
 			print("session {}:".format(idx), au_pos_sum, "total_frame: {}".format(total_frame), file=total_meta_data)
 			for i in range(10):
 				sum[i] += int(au_pos_sum[i])
+			sumcsv[sumidx][0] = idx
+			sumcsv[sumidx][1:] = au_pos_sum
+			sumidx += 1
 	print("total:", sum, file=total_meta_data)
 	total_meta_data.close()
+
+	sumcsvfile = open(DisfaAllLabelPath+'DISFA_meta.csv', 'w')
+	writer = csv.writer(sumcsvfile, delimiter = ',')
+	for line in range(sumcsv.shape[0]):
+		writer.writerow(sumcsv[line])
+	sumcsvfile.close()
 
 def get_all_labels():
 	all_labels = open("../DISFA_10aus/all_labels.txt", 'w')
@@ -116,10 +130,10 @@ def get_prob_distribution():
 
 
 if __name__ == '__main__':
-	# get_meta_data()
+	get_meta_data()
 	# get_all_labels()
 	# get_picked_meta_data()
-	get_prob_distribution()
+	# get_prob_distribution()
 			
 			
 

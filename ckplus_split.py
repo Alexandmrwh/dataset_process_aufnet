@@ -139,6 +139,7 @@ def generate10folds(expname, ausplits, stride):
     for foldidx in range(numfold):
         foldtxt = open(CKPlus10folds + expname +str(foldidx)+'.txt', 'w')
         subs = ausplits[foldidx]
+        print("=====> fold", foldidx, subs)
         # for each subject
         for sub in subs:
             SubImagePath = CKPlusNewImagePath+'S'+str(sub).zfill(3)+'/'
@@ -164,8 +165,8 @@ def generate10folds(expname, ausplits, stride):
                     allseq = os.listdir(SeqImagePath)
                     allseq.sort()
                     # for each sequence
-                    framelist = []
                     for seq in allseq:
+                        framelist = []
                         seqpath = SeqImagePath + seq
                         seqimages = open(seqpath, 'r')
                         for _, lines in enumerate(seqimages.readlines()):
