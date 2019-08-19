@@ -8,6 +8,7 @@ import random
 import sys
 import time
 import numpy as np
+from ckplus_label_process import ndarray2string
 
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 au_split_seq = [9, 2, 1, 17, 6, 4, 26, 12, 25]
@@ -21,16 +22,6 @@ stride = 2 # missing rate = 0.5
 # stride = 3 # missing rate = 0.33
 # stride = 4 # missing rate = 0.25
 # stride = 5 # missing rate = 0.2
-
-def ndarray2string(label):
-    label = label.astype(int)
-    label_str = ' '
-    for num in label:
-        if num == 1:
-            label_str += ' 1'
-        elif num == 0:
-            label_str += ' 0'
-    return label_str
 
 def partition(list_in, n):
     random.shuffle(list_in)
