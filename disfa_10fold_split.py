@@ -12,9 +12,12 @@ from ckplus_label_process import ndarray2string
 
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 au_split_seq = [9, 2, 1, 17, 6, 4, 26, 12, 25]
-DisfaAllLabelPath = "../data/DISFA/DISFA_all_label/"
-Disfa10FoldsPath = "../data/DISFA/"
+DisfaAllLabelPath = "../data/DISFA_all_label/"
+Disfa10FoldsPath = "../"
+DisfaImagePath = "../data/DISFA/"
 
+expnum = 2
+samplingrate = 10
 stride = 2 # missing rate = 0.5
 # stride = 3 # missing rate = 0.33
 # stride = 4 # missing rate = 0.25
@@ -116,15 +119,20 @@ def generate10folds(expname, ausplits, stride):
                 all_samples = session_label.readlines()
                 sample_num = len(all_samples)
                 aus = np.zeros(10)
-                for i in range(0, sample_num-stride+1, stride):
+                for i in range(0, sample_num - stride * samplingrate + 1, stride * samplingrate):
                     line1 = all_samples[i]
                     frameIdx1, aus[0], aus[1], aus[2], aus[3], \
                             aus[4], aus[5], aus[6], aus[7], aus[8], aus[9]= line1.split()
-                    for j in range(1, stride):
+                    # get new path for frameidx
+                    frameIdx1 = frameIdx1[2: ]
+                    frameIdx1 = DisfaImagePath + frameIdx1
+                    for j in range(samplingrate, stride * samplingrate, samplingrate):
                         aus = aus.astype(np.int)
                         line2 = all_samples[i+j]
                         frameIdx2, _, _, _, _, \
                                 _, _, _, _, _, _, = line2.split()
+                        frameIdx2 = frameIdx2[2: ]
+                        frameIdx2 = DisfaImagePath + frameIdx2
                         print(frameIdx1, frameIdx2, aus[0], aus[1], aus[2], aus[3], \
                                 aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], file=foldtxt)
         foldtxt.close()
@@ -146,7 +154,7 @@ def generatetrainvaltxt(expname, valfold):
 
 
 if __name__ == '__main__':
-    expnum = "EXP" + str(1) + '/'
+    expnum = "EXP" + str(expnum) + '/'
     expname = str(expnum)
     os.makedirs(Disfa10FoldsPath + expname)
 
