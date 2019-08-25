@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 import os
 import csv
-au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
+au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
 
 DisfaAllLabelPath = "../data/DISFA/DISFA_all_label/"
 

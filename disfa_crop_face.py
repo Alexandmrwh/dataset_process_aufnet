@@ -16,11 +16,11 @@ item = [#'01'
 		'10','11','12','13','14','15','16','17','18','19',
 		'20','21','22','23','24','25','26','27','28','29',
 		'30','31','32']
-au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
+au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
 
 logfile = open('./logfile','a')
-LeftVideoPath = '../DISFA/Videos_LeftCamera/'
-AULabelPath = '../DISFA/ActionUnit_Labels/'
+LeftVideoPath = '../../DISFA/Videos_LeftCamera/'
+AULabelPath = '../../'
 
 def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 	if exists:
@@ -34,7 +34,7 @@ def process(print_every=200):
 
 	# for each video
 	for idx in item:
-		final_label = open("../DISFA_face_crop_10aus/disfa_10aus_session_{}.txt".format(idx),'w')
+		final_label = open("../DISFA_face_crop_11aus/disfa_11aus_session_{}.txt".format(idx),'w')
 		minx, miny, maxx, maxy = INT_MAX, INT_MAX, INT_MIN, INT_MIN
 		ItemName = 'SN' + str(idx).zfill(3)
 		FrameLabel = [' ']
@@ -76,9 +76,10 @@ def process(print_every=200):
 
 					markAU(FrameLabel,frameIdx,existsAU,au,exists=(AUIntensity != 0))
 
-		if not os.path.isdir('../DISFA_face_crop_10aus/'+ItemName):
-			os.mkdir('../DISFA_face_crop_10aus/'+ItemName)
+		if not os.path.isdir('../DISFA_face_crop_11aus/'+ItemName):
+			os.mkdir('../DISFA_face_crop_11aus/'+ItemName)
 
+		'''
 		for t, label in enumerate(FrameLabel):
 			if existsAU[t] == 0:
 				continue
@@ -110,6 +111,7 @@ def process(print_every=200):
 				print("current face rect is: ({}, {}), ({}, {})".format(minx, miny, maxx, maxy))
 
 		print("general face rect is: ({}, {}), ({}, {})".format(minx, miny, maxx, maxy))
+		'''
 
 		for t,label in enumerate(FrameLabel):
 			if existsAU[t]==0:
@@ -117,9 +119,10 @@ def process(print_every=200):
 
 			if t % print_every == 0:
 				print("Saving frame {}".format(t))
-
-			saveImagePath = '../DISFA_face_crop_10aus/'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
+			
 			_path = './'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
+			'''
+			saveImagePath = '../DISFA_face_crop_11aus/'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
 			if not os.path.isfile(saveImagePath):
 				vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
 				isRead,frame = vidLeft.read()
@@ -131,6 +134,7 @@ def process(print_every=200):
 					print("Saved",saveImagePath,file=logfile)
 			else:
 				print(saveImagePath, "exists.",file=logfile)
+			'''
 			print(_path,label,file=final_label)
 			
 
