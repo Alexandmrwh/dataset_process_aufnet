@@ -13,8 +13,8 @@ from ckplus_label_process import ndarray2string
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
 au_nums = len(au_idx)
 
-au_split_seq = [9, 2, 1, 17, 6, 4, 26, 12, 25]
-DisfaAllLabelPath = "../data/DISFA_all_label/"
+au_split_seq = [9, 2, 1, 15, 17, 6, 4, 26, 12, 25]
+DisfaAllLabelPath = "../data/DISFA_11_label/"
 Disfa10FoldsPath = "../"
 DisfaImagePath = "../data/DISFA/"
 
@@ -120,11 +120,11 @@ def generate10folds(expname, ausplits, stride):
                 session_label = open(session_label_path,'r')
                 all_samples = session_label.readlines()
                 sample_num = len(all_samples)
-                aus = np.zeros(10)
+                aus = np.zeros(au_nums)
                 for i in range(0, sample_num - stride * samplingrate + 1, stride * samplingrate):
                     line1 = all_samples[i]
                     frameIdx1, aus[0], aus[1], aus[2], aus[3], \
-                            aus[4], aus[5], aus[6], aus[7], aus[8], aus[9]= line1.split()
+                            aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], aus[10]= line1.split()
                     # get new path for frameidx
                     frameIdx1 = frameIdx1[2: ]
                     frameIdx1 = DisfaImagePath + frameIdx1
@@ -136,7 +136,7 @@ def generate10folds(expname, ausplits, stride):
                         frameIdx2 = frameIdx2[2: ]
                         frameIdx2 = DisfaImagePath + frameIdx2
                         print(frameIdx1, frameIdx2, aus[0], aus[1], aus[2], aus[3], \
-                                aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], file=foldtxt)
+                                aus[4], aus[5], aus[6], aus[7], aus[8], aus[9], aus[10], file=foldtxt)
         foldtxt.close()
 
 def generatetrainvaltxt(expname, valfold):
