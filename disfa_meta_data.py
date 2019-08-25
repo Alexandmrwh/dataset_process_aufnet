@@ -3,36 +3,36 @@ import pickle
 import os
 import csv
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
-
+au_nums = len(au_idx)
 DisfaAllLabelPath = "../data/DISFA/DISFA_all_label/"
 
 def get_meta_data():
 	total_meta_data = open(DisfaAllLabelPath + "DISFA_meta_data.txt",'w')
 	print(au_idx, file=total_meta_data)
-	sum = np.zeros(10)
-	sumcsv = np.zeros(shape = [27, len(au_idx)+1], dtype=int)
+	sum = np.zeros(au_nums)
+	sumcsv = np.zeros(shape = [27, au_nums+1], dtype=int)
 	sumidx = 0
 	for idx in range(1, 33):
-		au_pos_sum = np.zeros(10)
+		au_pos_sum = np.zeros(au_nums)
 		total_frame = 0
 		txt_name = str(idx).zfill(2)
-		session_label_path = DisfaAllLabelPath + "disfa_10aus_session_{}.txt".format(txt_name)
+		session_label_path = DisfaAllLabelPath + "disfa_11aus_session_{}.txt".format(txt_name)
 
 		# read the label file of each session
 		if os.path.isfile(session_label_path):
 			session_label = open(session_label_path,'r')
 			for _, lines in enumerate(session_label.readlines()):
 				total_frame += 1
-				au_pos_tmp = np.zeros(10)
+				au_pos_tmp = np.zeros(au_nums)
 				_, au_pos_tmp[0], au_pos_tmp[1], \
 					au_pos_tmp[2], au_pos_tmp[3], \
 					au_pos_tmp[4], au_pos_tmp[5], au_pos_tmp[6],\
-				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9]= lines.split()
-				for i in range(10):
+				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9], au_pos_tmp[10]= lines.split()
+				for i in range(au_nums):
 					au_pos_sum[i] += int(au_pos_tmp[i])
 				
 			print("session {}:".format(idx), au_pos_sum, "total_frame: {}".format(total_frame), file=total_meta_data)
-			for i in range(10):
+			for i in range(au_nums):
 				sum[i] += int(au_pos_sum[i])
 			sumcsv[sumidx][0] = idx
 			sumcsv[sumidx][1:] = au_pos_sum
@@ -63,9 +63,9 @@ def get_all_labels():
 def get_picked_meta_data():
 	picked_meta_data = open("../DISFA_10aus/DISFA_picked_meta_data.txt",'w')
 	print(au_idx, file=picked_meta_data)
-	sum = np.zeros(10)
+	sum = np.zeros(au_nums)
 	for idx in range(1, 33):
-		au_pos_sum = np.zeros(10)
+		au_pos_sum = np.zeros(au_nums)
 		total_frame = 0
 		txt_name = str(idx).zfill(2)
 		session_label_path = "../DISFA_10aus/DISFA_face_crop_10aus/DISFA_picked_label/disfa_10aus_picked_{}.txt".format(txt_name)
@@ -75,14 +75,14 @@ def get_picked_meta_data():
 			session_label = open(session_label_path, 'r')
 			for _, lines in enumerate(session_label.readlines()):
 				total_frame += 1
-				au_pos_tmp = np.zeros(10)
+				au_pos_tmp = np.zeros(au_nums)
 				_, au_pos_tmp[0], au_pos_tmp[1], \
 					au_pos_tmp[2], au_pos_tmp[3], \
 					au_pos_tmp[4], au_pos_tmp[5], au_pos_tmp[6],\
-				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9]= lines.split()
-				for i in range(10):
+				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9], au_pos_tmp[10]= lines.split()
+				for i in range(au_nums):
 					au_pos_sum[i] += int(au_pos_tmp[i])
-			for i in range(10):
+			for i in range(au_nums):
 				sum[i] += int(au_pos_sum[i])
 
 			print("session {}:".format(idx), au_pos_sum, "total_frame: {}".format(total_frame), file=picked_meta_data)
@@ -93,8 +93,8 @@ def get_picked_meta_data():
 def get_prob_distribution():
 	prob_distribution = open("../data/DISFA/DISFA_prob_distribution.txt", 'w')
 	prob_distribution_pkl = open("../data/DISFA/DISFA_prob_distribution.pkl", 'wb')
-	single_occurance = np.zeros(len(au_idx))
-	co_occurance = np.zeros([len(au_idx), len(au_idx)])
+	single_occurance = np.zeros(au_nums)
+	co_occurance = np.zeros([au_nums, au_nums])
 	print(au_idx, file=prob_distribution)
 	
 	# for each session
@@ -106,15 +106,15 @@ def get_prob_distribution():
 		if os.path.isfile(session_label_path):
 			session_label = open(session_label_path, 'r')
 			for _, lines in enumerate(session_label.readlines()):
-				au_pos_tmp = np.zeros(10)
+				au_pos_tmp = np.zeros(au_nums)
 				_, au_pos_tmp[0], au_pos_tmp[1], \
 					au_pos_tmp[2], au_pos_tmp[3], \
 					au_pos_tmp[4], au_pos_tmp[5], au_pos_tmp[6],\
-				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9]= lines.split()
-				for i in range(len(au_idx)):
+				 	au_pos_tmp[7], au_pos_tmp[8], au_pos_tmp[9], au_pos_tmp[10]= lines.split()
+				for i in range(au_nums):
 					single_occurance[i] += int(au_pos_tmp[i])
-				for i in range(len(au_idx)):
-					for j in range(i+1, len(au_idx)):
+				for i in range(au_nums):
+					for j in range(i+1, au_nums):
 						if au_pos_tmp[i] and au_pos_tmp[j]:
 							co_occurance[i][j] += 1
 							co_occurance[j][i] += 1

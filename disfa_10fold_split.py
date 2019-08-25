@@ -11,6 +11,8 @@ import numpy as np
 from ckplus_label_process import ndarray2string
 
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
+au_nums = len(au_idx)
+
 au_split_seq = [9, 2, 1, 17, 6, 4, 26, 12, 25]
 DisfaAllLabelPath = "../data/DISFA_all_label/"
 Disfa10FoldsPath = "../"
