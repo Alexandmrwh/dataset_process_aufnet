@@ -4,7 +4,7 @@ import os
 import csv
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
 au_nums = len(au_idx)
-DisfaAllLabelPath = "../data/DISFA/DISFA_all_label/"
+DisfaAllLabelPath = "../data/DISFA/DISFA_11_label/"
 
 def get_meta_data():
 	total_meta_data = open(DisfaAllLabelPath + "DISFA_meta_data.txt",'w')
