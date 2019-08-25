@@ -14,11 +14,11 @@ au_idx = [1, 2, 4, 5, 6, 9 ,12, 15, 17, 25, 26]
 au_nums = len(au_idx)
 
 au_split_seq = [9, 2, 1, 15, 17, 6, 4, 26, 12, 25]
-DisfaAllLabelPath = "../data/DISFA_11_label/"
+DisfaAllLabelPath = "../data/DISFA/DISFA_11_label/"
 Disfa10FoldsPath = "../"
 DisfaImagePath = "../data/DISFA/"
 
-expnum = 2
+expnum = 5
 samplingrate = 10
 stride = 2 # missing rate = 0.5
 # stride = 3 # missing rate = 0.33
