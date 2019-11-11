@@ -85,7 +85,7 @@ def aligned_crop(print_every=200):
 		total_frame = vidLeft.get(cv2.CV_CAP_PROP_FRAME_COUNT) 
 		for t in range(total_frame):
 			
-			vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
+			vidLeft.set(cv2.CV_CAP_PROP_POS_FRAMES,t)
 			isRead, frame = vidLeft.read()
 			if isRead:
 				# align
