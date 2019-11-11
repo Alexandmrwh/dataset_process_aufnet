@@ -20,10 +20,10 @@ DisfaImagePath = "../data/DISFA/"
 
 expnum = 5
 samplingrate = 10
-stride = 2 # missing rate = 0.5
-# stride = 3 # missing rate = 0.33
-# stride = 4 # missing rate = 0.25
-# stride = 5 # missing rate = 0.2
+stride = 2 
+# stride = 3 
+# stride = 4 
+# stride = 5 
 
 def partition(list_in, n):
     random.shuffle(list_in)
@@ -114,7 +114,7 @@ def generate10folds(expname, ausplits, stride):
         # for each session
         for session_idx in sessions:
             txt_name = str(session_idx).zfill(2)
-            session_label_path = DisfaAllLabelPath + "disfa_10aus_session_{}.txt".format(txt_name)
+            session_label_path = DisfaAllLabelPath + "disfa_11aus_session_{}.txt".format(txt_name)
             print(session_label_path)
             if os.path.isfile(session_label_path):
                 session_label = open(session_label_path,'r')

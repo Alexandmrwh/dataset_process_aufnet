@@ -6,21 +6,61 @@ import cv2
 import csv
 import dlib
 import sys
+import math
+import numpy as np
+from imutils import face_utils
 
 INT_MAX = sys.maxsize  
 
 INT_MIN = -sys.maxsize-1
 
-item = [#'01'
-		'02','03','04','05','06','07','08','09',
-		'10','11','12','13','14','15','16','17','18','19',
-		'20','21','22','23','24','25','26','27','28','29',
-		'30','31','32']
+item = ['01']
+		# '02','03','04','05','06','07','08','09',
+		# '10','11','12','13','14','15','16','17','18','19',
+		# '20','21','22','23','24','25','26','27','28','29',
+		# '30','31','32']
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 
 logfile = open('./logfile','a')
 LeftVideoPath = '../DISFA/Videos_LeftCamera/'
 AULabelPath = '../DISFA/ActionUnit_Labels/'
+shapePredictorPath = '../DISFA/shape_predictor_68_face_landmarks.dat'
+
+faceDetector = dlib.get_frontal_face_detector()
+facialLandmarkPredictor = dlib.shape_predictor(shapePredictorPath)
+
+def get_facelandmark(grayImage):
+    global faceDetector, facialLandmarkPredictor
+    face = faceDetector(grayImage, 1)
+    if len(face) == 0:
+        return None
+
+    shape = facialLandmarkPredictor(grayImage, face[0])
+    facialLandmarks = face_utils.shape_to_np(shape)
+
+    xyList = []
+    for (x, y) in facialLandmarks[0:]:  
+        xyList.append(x)
+        xyList.append(y)
+
+    return xyList
+
+def alignment(img, featureList):
+
+    Xs = featureList[::2]
+    Ys = featureList[1::2]
+
+    eye_center =((Xs[36] + Xs[45] * 1./2), (Ys[36] + Ys[45] * 1./2))
+    dx = Xs[45] - Xs[36]
+    dy = (Ys[45] - Ys[36])
+
+    angle = math.atan2(dy, dx) * 180. / math.pi
+    # 计算仿射矩阵
+    RotationMatrix = cv2.getRotationMatrix2D(eye_center, angle, scale=1)
+
+    new_img = cv2.warpAffine(img,RotationMatrix,(img.shape[1],img.shape[0])) 
+
+    return new_img, eye_center
 
 def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 	if exists:
@@ -28,7 +68,47 @@ def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 		existsAU[frameIdx] = 1
 	else:
 		FrameLabel[frameIdx] = FrameLabel[frameIdx] +' 0'
-	
+
+def aligned_crop(print_every=200):
+	# for each video
+	for idx in item:
+		minx, miny, maxx, maxy = INT_MAX, INT_MAX, INT_MIN, INT_MIN
+		ItemName = 'SN' + str(idx).zfill(3)
+		print("Checking "+ItemName+" ...")
+
+		if not os.path.isfile(LeftVideoPath+'LeftVideoSN0'+idx+'_comp.avi'):
+			print("Failed to find %s"%(ItemName))
+			continue
+
+		# aligning 
+		vidLeft = cv2.VideoCapture(LeftVideoPath+'LeftVideoSN0'+idx+'_comp.avi')
+		total_frame = vidLeft.get(cv2.CV_CAP_PROP_FRAME_COUNT) 
+		for t in range(total_frame):
+			
+			vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
+			isRead, frame = vidLeft.read()
+			if isRead:
+				# align
+				frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+				featureList = get_facelandmark(frame_gray)
+				alignimg, _ = alignment(frame, featureList)
+
+				saveImagePath = '../align_disfa/'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
+				_path = './'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
+				if not os.path.isfile(saveImagePath):
+					vidLeft.set(cv2.CAP_PROP_POS_FRAMES,t)
+					isRead,frame = vidLeft.read()
+					# crop face and save
+					if isRead:
+						cv2.imwrite(saveImagePath, alignimg)
+						print("Saved",saveImagePath,file=logfile)
+			else:
+				print(saveImagePath, "exists.",file=logfile)
+				
+			if t % print_every == 0:
+				print("aligning: {}".format(t))
+
+
 
 def process(print_every=200):
 
@@ -88,7 +168,6 @@ def process(print_every=200):
 			if isRead:
 				# detect face rect, return in [left, top, right, bottom]
 				frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-				faceDetector = dlib.get_frontal_face_detector()
 				face = faceDetector(frame_gray, 1)
 				if len(face) == 0:
 					print("No face detected in frame{}".format(t))
@@ -138,5 +217,6 @@ def process(print_every=200):
 
 
 if __name__ == '__main__':
-	process()
+	# process()
+	aligned_crop()
 
