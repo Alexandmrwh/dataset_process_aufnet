@@ -32,15 +32,16 @@ facialLandmarkPredictor = dlib.shape_predictor(shapePredictorPath)
 
 def get_facelandmark(grayImage):
     global faceDetector, facialLandmarkPredictor
+    xyList = []
+    left, top = 0, 0
     face = faceDetector(grayImage, 1)
     if len(face) == 0:
-        return None
+        return xyList, left, top
 
     shape = facialLandmarkPredictor(grayImage, face[0])
     left, top = face[0].left(), face[0].top()
     facialLandmarks = face_utils.shape_to_np(shape)
 
-    xyList = []
     for (x, y) in facialLandmarks[0:]:  
         xyList.append(x)
         xyList.append(y)
