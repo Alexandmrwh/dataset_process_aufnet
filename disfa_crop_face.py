@@ -92,7 +92,7 @@ def aligned_video(print_every=200):
 				# align
 				frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 				featureList = get_facelandmark(frame_gray)
-				if len(featureList) or featureList is not None:
+				if featureList is not None and len(featureList):
 					alignimg, _ = alignment(frame, featureList)
 					saveImagePath = '../align_disfa/'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
 					print(saveImagePath)
