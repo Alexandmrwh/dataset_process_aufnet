@@ -15,7 +15,8 @@ INT_MAX = sys.maxsize
 INT_MIN = -sys.maxsize-1
 
 item = [#'01',
-		'02','03','04','05','06','07','08','09',
+		'02',
+		'03','04','05','06','07','08','09',
 		'10','11','12','13','14','15','16','17','18','19',
 		'20','21','22','23','24','25','26','27','28','29',
 		'30','31','32']
@@ -36,6 +37,7 @@ def get_facelandmark(grayImage):
         return None
 
     shape = facialLandmarkPredictor(grayImage, face[0])
+    left, top = face[0].left(), face[0].top()
     facialLandmarks = face_utils.shape_to_np(shape)
 
     xyList = []
@@ -43,14 +45,14 @@ def get_facelandmark(grayImage):
         xyList.append(x)
         xyList.append(y)
 
-    return xyList
+    return xyList, left, top
 
 def alignment(img, featureList):
 
     Xs = featureList[::2]
     Ys = featureList[1::2]
 
-    eye_center =((Xs[36] + Xs[45] * 1./2), (Ys[36] + Ys[45] * 1./2))
+    eye_center =((Xs[36] + Xs[45]) * 1./2, (Ys[36] + Ys[45]) * 1./2)
     dx = Xs[45] - Xs[36]
     dy = (Ys[45] - Ys[36])
 
@@ -69,11 +71,11 @@ def markAU(FrameLabel,frameIdx,existsAU,au,exists):
 	else:
 		FrameLabel[frameIdx] = FrameLabel[frameIdx] +' 0'
 
-def aligned_video(print_every=200):
+def align_crop_video(print_every=200):
 	# for each video
 	for idx in item:
 		ItemName = 'SN' + str(idx).zfill(3)
-		print("Checking "+ItemName+" ...")
+		print("Aligning "+ItemName+" ...")
 
 		if not os.path.isfile(LeftVideoPath+'LeftVideoSN0'+idx+'_comp.avi'):
 			print("Failed to find %s"%(ItemName))
@@ -91,37 +93,24 @@ def aligned_video(print_every=200):
 			if isRead:
 				# align
 				frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-				featureList = get_facelandmark(frame_gray)
+				featureList, _, _ = get_facelandmark(frame_gray)
 				if featureList is not None and len(featureList):
 					alignimg, _ = alignment(frame, featureList)
 					saveImagePath = '../align_disfa/'+ItemName+'/'+ItemName+'_'+str(t)+'.png'
 					print(saveImagePath)
 					
 					cv2.imwrite(saveImagePath, alignimg)
-					print("Saved",saveImagePath,file=logfile)
 				
 			if t % print_every == 0:
 				print("aligning: {}".format(t))
 
-def crop_at_eye_center(print_every=200):
-
-	# for each folder
-	for idx in item:
 		minx, miny, maxx, maxy = INT_MAX, INT_MAX, INT_MIN, INT_MIN
-		ItemName = 'SN' + str(idx).zfill(3)
-		print("Checking "+ItemName+" ...")
-
-		if not os.path.isdir('../align_disfa/'+ItemName):
-			print("Failed to find %s"%(ItemName))
-			continue
+		print("Cropping "+ItemName+" ...")
 
 		if not os.path.isdir('../align_crop_disfa/'+ItemName):
 			os.mkdir('../align_crop_disfa/'+ItemName)
 
-		cnt = 0
 		for file in os.listdir('../align_disfa/'+ItemName+'/'):
-			cnt += 1
-			if cnt == 20: break
 			frame = cv2.imread('../align_disfa/'+ItemName+'/'+file)
 			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 			face = faceDetector(frame_gray, 1)
@@ -161,9 +150,8 @@ def crop_at_eye_center(print_every=200):
 			right = int(eye_center[0] + 0.5 * width)
 			top = int(eye_center[1] - 0.4 * height)
 			bottom = int(eye_center[1] + 0.6 * height)
-
 			cv2.imwrite(savepath,frame[top: bottom, left: right])
-			# cv2.imwrite(savepath,frame[left: right, top: bottom])
+			print(savepath)
 
 
 def process(print_every=200):
@@ -274,6 +262,5 @@ def process(print_every=200):
 
 if __name__ == '__main__':
 	# process()
-	aligned_video()
-	# crop_at_eye_center()
+	align_crop_video()
 
