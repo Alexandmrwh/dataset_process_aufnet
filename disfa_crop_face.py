@@ -144,29 +144,25 @@ def crop_at_eye_center(print_every=200):
 		width = maxx - minx
 		height = maxy - miny
 
-		print(minx, miny, maxx, maxy, width, height)
-
 		saveImagePath = '../align_crop_disfa/'+ItemName+'/'
 
 		for file in os.listdir('../align_disfa/'+ItemName+'/'):
-			print(file)
 			frame = cv2.imread('../align_disfa/'+ItemName+'/'+file)
 			savepath = saveImagePath + file
 			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-			featureList = get_facelandmark(frame_gray)
-			_, eye_center = alignment(frame, featureList)
+
+			featureList, x, y = get_facelandmark(frame_gray)
+			Xs = featureList[::2]
+			Ys = featureList[1::2]
+
+			eye_center =((Xs[36] + Xs[45]) * 1./2, (Ys[36] + Ys[45]) * 1./2)
 
 			left = int(eye_center[0] - 0.5 * width)
 			right = int(eye_center[0] + 0.5 * width)
 			top = int(eye_center[1] - 0.4 * height)
 			bottom = int(eye_center[1] + 0.6 * height)
 
-			cv2.rectangle(frame, (int(minx), int(miny)), (int(maxx), int(maxy)), (0,255,0),2)
-			cv2.rectangle(frame, (left, top), (right, bottom), (0,255,0),2)
-			cv2.rectangle(frame, (int(eye_center[0]), int(eye_center[1])), (right, bottom), (0,255,0),2)
-			cv2.imwrite(savepath,frame)
-
-			# cv2.imwrite(savepath,frame[top: bottom, left: right])
+			cv2.imwrite(savepath,frame[top: bottom, left: right])
 			# cv2.imwrite(savepath,frame[left: right, top: bottom])
 
 
