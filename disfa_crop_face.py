@@ -14,11 +14,11 @@ INT_MAX = sys.maxsize
 
 INT_MIN = -sys.maxsize-1
 
-item = [#'01',
-		'02',
-		'03','04','05','06','07','08','09',
-		'10','11','12','13','14','15','16','17','18','19',
-		'20','21','22','23','24','25','26','27','28','29',
+item = [#'01','02',
+		# '03','04','05','06','07','08','09',
+		# '10','11','12','13','14','15','16','17','18','19',
+		# '20','21','22',
+		'23','24','25','26','27','28','29',
 		'30','31','32']
 au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 
@@ -142,17 +142,18 @@ def align_crop_video(print_every=200):
 			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 			featureList, x, y = get_facelandmark(frame_gray)
-			Xs = featureList[::2]
-			Ys = featureList[1::2]
+			
+			if featureList is not None and len(featureList) > 45:
+				Xs = featureList[::2]
+				Ys = featureList[1::2]
+				eye_center =((Xs[36] + Xs[45]) * 1./2, (Ys[36] + Ys[45]) * 1./2)
 
-			eye_center =((Xs[36] + Xs[45]) * 1./2, (Ys[36] + Ys[45]) * 1./2)
-
-			left = int(eye_center[0] - 0.5 * width)
-			right = int(eye_center[0] + 0.5 * width)
-			top = int(eye_center[1] - 0.4 * height)
-			bottom = int(eye_center[1] + 0.6 * height)
-			cv2.imwrite(savepath,frame[top: bottom, left: right])
-			print(savepath)
+				left = int(eye_center[0] - 0.5 * width)
+				right = int(eye_center[0] + 0.5 * width)
+				top = int(eye_center[1] - 0.4 * height)
+				bottom = int(eye_center[1] + 0.6 * height)
+				cv2.imwrite(savepath,frame[top: bottom, left: right])
+				print(savepath)
 
 
 def process(print_every=200):
