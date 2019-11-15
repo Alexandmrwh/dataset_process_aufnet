@@ -11,7 +11,6 @@ import numpy as np
 from imutils import face_utils
 
 INT_MAX = sys.maxsize  
-
 INT_MIN = -sys.maxsize-1
 
 item = [#'01','02',
