@@ -24,7 +24,7 @@ au_idx = [1, 2, 4, 5, 6, 9 ,12, 17, 25, 26]
 logfile = open('./logfile','a')
 LeftVideoPath = '../DISFA/Videos_LeftCamera/'
 AULabelPath = '../DISFA/ActionUnit_Labels/'
-shapePredictorPath = '../DISFA/shape_predictor_68_face_landmarks.dat'
+shapePredictorPath = '../../shape_predictor_68_face_landmarks.dat'
 
 faceDetector = dlib.get_frontal_face_detector()
 facialLandmarkPredictor = dlib.shape_predictor(shapePredictorPath)
